@@ -1,0 +1,73 @@
+{% extends './layout.html' %}  {# '/blog/layout.html'로 하면 오류 #}
+
+{% block content %}
+   <a href="{% url 'shop:item_list' %}">상품 목록으로 돌아가기</a><br/><br/>
+
+
+    <form>
+    <fieldset>
+    <table>
+        <thead>
+            <th>필드</th><th>내용</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td width="10%">id:</td><td><input type="text" value={{ item.id }}></td>
+        </tr>
+        <tr>
+            <td>글쓴이:</td><td><input type="text" value="{{ item.author }}"></td>
+        </tr>
+        <tr>
+            <td>상품명:</td><td><input type="text" value="{{ item.name }}" style="width:300px;"></td>
+        </tr>
+        <tr>
+            <td>사진:</td><td>{% if item.photo %}<img src="{{ item.photo.url }}" height="300px" />{% endif %}</td>
+        </tr>
+        <tr>
+            <td>설명:</td>
+            <td><textarea style="width: 400px; height: 200px; overflow: visible;">{{ item.desc }}</textarea></td>
+        </tr>
+        <tr>
+            <td>등록 일시:</td><td><input type="text" value="{{ item.created_at }}"></td>
+        </tr>
+        <tr>
+            <td>수정 일시:</td><td><input type="text" value="{{ item.updated }}"></td>
+        </tr>
+        </tbody>
+    </table>
+    </fieldset>
+    </form> <br/>
+
+    {# https://python.bakyeono.net/chapter-7-2.html #}
+{#    `for key, value in my_tag.items`:#}
+    `태그 분류`:
+    {% for key, value in my_tag.items %}
+        {% if value > 0 %}
+            <input type="checkbox" name={{ key }} checked>
+        {% else %}
+            <input type="checkbox" name={{ key }}>
+        {% endif %}
+        <label for={{ key }}> {{ key }} </label>
+    {% endfor %} <br/>
+    <hr>
+
+    <table>
+        <thead>
+            <th>id</th>
+            <th>후기</th>
+            <th>작성 일시</th>
+            <th>수정 일시</th>
+        </thead>
+        <tbody>
+        {% for r in item.reviews.all %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.review }}</td>
+                <td>{{ r.created_at }}</td>
+                <td>{{ r.updated }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
