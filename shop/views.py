@@ -1,11 +1,131 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Item, Tag
+import re
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 import requests
 from PIL import Image, ImageDraw, ImageFont
 import pandas as pd                           # 엑셀 요청 처리
 from io import BytesIO
 from urllib.parse import quote
+from django.views.generic import CreateView, UpdateView
+from .models import Item
+from .form import ItemForm
+
+
+item_new = CreateView.as_view(model=Item, form_class=ItemForm)
+item_edit = UpdateView.as_view(model=Item, form_class=ItemForm)
+
+# # b29) 장고 Form 활용한 ...
+# def item_new(request, item=None):
+#     if request.method == 'POST':
+#         form = ItemForm(request.POST, request.FILES, instance=item)
+#         if form.is_valid():
+#             item = form.save()
+#             # return redirect(item)
+#             return redirect('shop:item_list')
+#     else:
+#         form = ItemForm(instance=item)
+#
+#     return render(request, 'shop/item_form.html', {'form': form, })
+
+# def item_new(request, item=None):
+#     error_list = []
+#     initial = {}
+#
+#     if request.method == 'POST':
+#         data = request.POST
+#         files = request.FILES
+#
+#         name = data.get('name')
+#         desc = data.get('desc')
+#         price = data.get('price')
+#         photo = files.get('photo')
+#         is_published = data.get('is_published') in (True, 't', 'True', '1')
+#
+#         # 유효성 검사
+#         if len(name) < 2:
+#             error_list.append('name을 2글자 이상 입력해주세요.')
+#
+#         if re.match(r'^[\da-zA-Z\s]+$', desc):
+#             error_list.append('한글을 입력해주세요.')
+#
+#         if not error_list:
+#             # 저장 시도
+#             if item is None:
+#                 item = Item()
+#
+#             item.name = name
+#             item.desc = desc
+#             item.price = price
+#             item.is_published = is_published
+#             if photo:
+#                 item.photo.save(photo.name, photo, save=False)
+#
+#             try:
+#                 item.save()
+#             except Exception as e:
+#                 error_list.append(e)
+#             else:
+#                 # return redirect(item)  # item.get_absolute_url 호출됨
+#                 return redirect('shop:item_list')
+#
+#         initial = {
+#             'name': name,
+#             'desc': desc,
+#             'price': price,
+#             'photo': photo,
+#             'is_published': is_published,
+#         }
+#     else:
+#         if item is not None:
+#             initial = {
+#                 'name': item.name,
+#                 'desc': item.desc,
+#                 'price': item.price,
+#                 'photo': item.photo,
+#                 'is_published': item.is_published,
+#             }
+#     return render(request, 'shop/item_form.html', {
+#         'error_list': error_list,
+#         'initial': initial,
+#     })
+
+
+# def item_edit(request, pk):
+#     item = get_object_or_404(Item, pk=pk)
+#     return item_new(request, item)
+
+
+def item_remove(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    item.delete()
+    return redirect('shop:item_list')
+
+
+# def item_new(request):
+#     print('request.GET:', request.GET)
+#     print('request.POST:', request.POST)
+#     print('request.FILES:', request.FILES)
+#     return render(request, 'shop/item_form.html')
+
+
+def item_list(request):
+    items = Item.objects.all()
+    # 키값이 'q'로 지정된 값이 없으면 None이 반환됨
+    q = request.GET.get('q', '')  # 'q'로 지정된 값이 없으면 '' 반환
+    if q:  # q가 널 아니면 qs에 filter 조건 추가
+        items = items.filter(name__icontains=q)
+    return render(request, 'shop/item_list.html', {
+        'item_list': items,
+        'q': q, })
+
+
+
+
+
+def item_detail(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    return render(request, 'shop/item_detail.html',
+                  {'item': item})
 
 
 def response_excel(request):
@@ -24,7 +144,6 @@ def response_excel(request):
         "attachment; filename*=utf-8''{}".format(encoded_filename)
     return response
 
-
 def response_image(request):
     ttf_path = 'C:/Windows/Fonts/H2PORL.TTF'  # 윈도우, 맥: '/Library/Fonts/AppleGothic.ttf'
 
@@ -39,18 +158,17 @@ def response_image(request):
     draw = ImageDraw.Draw(canvas)  # canvas에 대한 ImageDraw 객체 획득
 
     text = 'Smart IT, by logistex'
-    left, top = 200, 200
+    left, top = 400, 400
     margin = 10
     width, height = font.getsize(text)
     right = left + width + margin
     bottom = top + height + margin
     draw.rectangle((left, top, right, bottom), (255, 255, 224))
-    draw.text((left + 5, top + 5), text, font=font, fill=(20, 20, 20))
+    draw.text((left+5, top+5), text, font=font, fill=(20, 20, 20))
 
     response = HttpResponse(content_type='image/png')
     canvas.save(response, format='PNG')  # HttpResponse의 유사 파일 객체 특성 활용
     return response
-
 
 def year_archive(request, year):
     if year is not None:
@@ -58,40 +176,10 @@ def year_archive(request, year):
     else:
         return HttpResponse('해당년도 자료는 없습니다.')
 
-
 def my_sum(request, x, y):
     result = x + y
     output = '{} = {} + {}'.format(result, x, y)
     return HttpResponse(output)
-
-
-def item_list(request):
-    items = Item.objects.all()
-    # return render(
-    #     request,                    # 요청 정보
-    #     'shop/item_list.html',    # 템플릿 이름
-    #     {'item_list': items})      # 템플릿에 전달할 정보를 사전형태
-    # request.GET 객체에게 key값이 'q'로 지정된 값을 요구해서 변수 q에 저장
-    q = request.GET.get('q', '')     # key값이 'q'로 지정된 값이 없으면 None이 반환된
-    if q: # q가 널 아니면 qs에 filter 조건 추가
-        items = items.filter(name__icontains=q)
-    return render(request, 'shop/item_list.html', {
-        'item_list': items,
-        'q': q,
-    })
-
-def item_detail(request, pk):
-    item = get_object_or_404(Item, pk=pk)
-    all_tag = Tag.objects.all()
-    mystr = item.tagged()
-    my_tag = {}
-    for t in all_tag:
-        # mystr에서 t.name을 발견한 위치를 my_tag 사전에 등록
-        # 키는 t.name으로, 값은 (못 찾으면 -1, 찾으면 양수)
-        my_tag[t.name] = str(mystr).find(t.name)
-    return render(request, 'shop/item_detail.html',
-                  {'item': item, 'my_tag': my_tag})
-
 
 class MyClass:
     x = 10
@@ -122,7 +210,7 @@ def test_templates(requset):
     template = Template(
         "사전 < my_dict.last_name >: {{ my_dict.last_name }} <br/>"
         + "객체 < my_obj.x >: {{ my_obj.x }} {{ my_obj.y }} <br/>"
-        + "리스트 < my_list.0 >: {{ my_list.0 }} {{ my_list.1 }} {{ my_list.2 }} <br/>"
+        + "리스트 < my_list.0 >: {{ my_list.0 }} {{ my_list.2 }}: {{ my_list.2 }} <br/>"
         + "< my_dict.first_name|title >: {{ my_dict.first_name|title }} <br/>"
         + "{% verbatim myblock %}{% now 'Y-m-d H:i:s' %}"
         + "{% endverbatim myblock %} : {% now 'Y-m-d H:i:s' %} <br/>"
@@ -139,7 +227,7 @@ def test_templates(requset):
         + "< my_b_datetime|date:'Y년 m월 d일' > < my_b_datetime|time:'H시 i분 s초' >: "
         + "{{ my_b_datetime|date:'Y년 m월 d일' }}  {{ my_b_datetime|time:'H시 i분 s초' }} <br/>"
         + "(필터 내부에서 인수를 표시할 때 사용하는 \':\' 뒤에 띄우지 말 것!)<br/>"
-        # + "< my_string|lower|truncatewords:'4' >: {{ my_string|lower|truncatewords:'4' }} <br/>"   # 불필요한 따옴표 제거
+        + "< my_string|lower|truncatewords:'4' >: {{ my_string|lower|truncatewords:'4' }} <br/>"
         + "< my_string|lower|truncatewords:4 >: {{ my_string|lower|truncatewords:4 }} <br/>"
         + "(필터 내부에서 인수를 표시할 때 사용하는 \':\' 뒤에 띄우지 말 것!)<br/>"
         + "< my_string|lower|truncatechars:'12' >: {{ my_string|lower|truncatechars:'12' }} <br/>"
@@ -148,6 +236,3 @@ def test_templates(requset):
     content = template.render(context)
 
     return HttpResponse(content)
-
-
-

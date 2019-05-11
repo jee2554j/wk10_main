@@ -1,0 +1,55 @@
+/* Form Error */
+.error-note {
+    display: block;
+    margin: 5px 0;
+    border: 1px solid #c30;
+    background: #fcf;
+    padding: 5px 25px;
+    color: #c30;
+    font-size: 12px;
+    font-weight: bold;
+}
+/* Authentication Forms */
+fieldset {
+    border: 1px solid #ccc;
+}
+.aligned label {
+    float: left;
+    width: 50%;
+    padding: 3px 10px 0 0;
+}
+.form-row {
+    padding: 10px;
+    font-size: 20px;
+    border-bottom: 1px solid #eee;
+}
+.submit-row {
+    /*float: left;*/
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    text-align: right;
+}
+.submit-row input {
+    /*margin: 10px;*/
+    background: #FF747C;
+    color: #FFFFFF;
+    border-color: #FF747C;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+}
+
+#content2 {
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    top: 120px;
+    margin-bottom: 170px;
+    width: 50%;
+}
+
+.aligned {
+    /*width: 50%;*/
+}

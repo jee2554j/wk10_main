@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}회원 가입 완료{% endblock %}
+{% load staticfiles %}
+{% block extrastyle %}{% static "../static/forms.css" %}{% endblock %}
+
+{% block content %}
+<div id="content2">
+    <h1>회원 등록이 성공적으로 완료되었습니다.</h1>
+    <p>회원으로 등록해주셔서 감사합니다.</p>
+    <p><a href="{% url 'login' %}">다시 로그인</a></p>
+</div>
+{% endblock %}

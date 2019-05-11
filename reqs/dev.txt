@@ -1,0 +1,4 @@
+-r common.txt  # common.txt 내용을 적용하고 추가 사항 지정
+
+django-debug-toolbar==1.11
+django-jinja==2.4.1

@@ -1,0 +1,115 @@
+<!DOCTYPE html>     <!--HTML5 규약을 준수하는 파일-->
+<html lang="ko">    <!--언어는 한국어로 지정--><!---->
+
+<head>              <!--페이지 타이틀과 css 파일 2개를 연결-->
+<title>{% block title %}Django Web Programming{% endblock %}</title>
+
+{% load staticfiles %}  <!--정적 파일인 css 연결하기 위하여, staticfiles를 로드-->
+    <!-- Bootstrap CSS-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+<!--스타일시트 css/base.css 작성이 필요함-->
+<link href="https://fonts.googleapis.com/css?family=Poor+Story" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "../static/base.css" %}{% endblock %}" />
+<link rel="stylesheet" type="text/css" href="{% block extrastyle %}{% endblock %}" />
+
+</head>
+
+<body>              <!--바디 영역은 4 영역(헤더/메뉴/콘텐츠/풋터)으로 구성-->
+
+<div id="header">                   <!--헤더 영역-->
+    <!-- navbar-->
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top shadow-sm bg-light">
+        <a href="{% url 'home' %}" class="navbar-brand"><img src="../../static/star.png" style="max-width: 7%; max-height: 7%;" />&nbsp&nbsp&nbsp2조 MAIN PAGE</a>
+      <button type="button"
+              data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false"
+              aria-label="Toggle navigation" class="navbar-toggler">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a href="{% url 'blog:post_list' %}" class="nav-link">blog</a></li>
+          <li class="nav-item"><a href="{% url 'shop:item_list' %}" class="nav-link">shop</a></li>
+        </ul>
+        <div>
+            {% if user.is_active %}
+                <h4 class="welcome">&nbsp&nbsp&nbsp
+                    <strong>{% firstof user.get_short_name user.get_username %} 님</strong>
+                    <div class="navbar-text ml-lg-3">
+                        <a href="{% url 'password_change' %}" class="btn btn-primary text-white shadow">비밀번호 변경</a>
+                    </div>
+                    <div class="navbar-text ml-lg-3">
+                      <a href="{% url 'logout' %}" class="btn btn-primary text-white shadow">로그아웃</a>
+                    </div>
+                </h4>
+            {% else %}
+                <h4 class="welcome">
+                    <div class="navbar-text ml-lg-3">
+                        <a href="{% url 'login' %}" class="btn btn-primary text-white shadow">로그인</a>
+                    </div>
+                    <div class="navbar-text ml-lg-3">
+                      <a href="{% url 'register' %}" class="btn btn-primary text-white shadow">회원가입</a>
+                    </div>
+                </h4>
+            {% endif %}
+        </div>
+      </div>
+    </nav>
+
+</div>
+
+{% block content %}
+
+{% endblock %}   <!--블록 태그로 콘텐츠 영역 정의 -->
+
+{% block footer %}
+    <!-- Footer-->
+    <div class="py-5 bg-light foot">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 mb-4 mb-lg-0">
+            <h5>WITHDOG Web</h5>
+            <ul class="contact-info list-unstyled">
+              <li><a href="mailto:sales@landy.com" class="text-dark">dldkgus0707@naver.com</a></li>
+              <li><a href="tel:123456789" class="text-dark">+82 2 2290 2380</a></li>
+            </ul>
+            <p class="text-muted">위드독 웹 사이트</p>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <h5>Pages</h5>
+            <ul class="links list-unstyled">
+              <li> <a href="{% url 'blog:post_list' %}" class="text-muted">blog</a></li>
+              <li> <a href="{% url 'shop:item_list' %}" class="text-muted">shop</a></li>
+              <li> <a href="{% url 'login' %}" class="text-muted">login</a></li>
+              <li> <a href="{% url 'register' %}" class="text-muted">register</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <h5>member</h5>
+            <ul class="links list-unstyled">
+              <li> <a href="#" class="text-muted">김수지</a></li>
+              <li> <a href="#" class="text-muted">한은경</a></li>
+              <li> <a href="#" class="text-muted">이아현</a></li>
+              <li> <a href="#" class="text-muted">문예지</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="py-3 bg-dark text-white">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7 text-center text-md-left">
+            <p class="mb-md-0">&copyleft; 2019 2조 Web. All rights reserved. </p>
+          </div>
+          <div class="col-md-5 text-center text-md-right">
+            <p class="mb-0">Template By <a href="https://bootstrapious.com/" class="external text-white">Bootstrapious</a> </p>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}    <!--블록 태그로 풋터 영역 정의-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

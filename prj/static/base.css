@@ -1,0 +1,161 @@
+body {
+    /*font-family: "Lucida Grande", Verdana, Arial, sans-serif;*/
+    font-family: 'Poor Story', cursive;
+    font-size: 16px;    /* ch08 1/1 */
+}
+
+/* PAGE STRUCTURE */
+div#header {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 50px;
+    width: 100%;
+    display: table;
+    background: #ff747c;
+    text-align: center;
+}
+
+div#menu {
+    position: absolute;
+    top: 80px;
+    height: 20px;
+    left: 10%;
+    right: 10%;
+    width: 80%;
+    display: table;
+    table-layout: fixed;
+    border-spacing: 27px 0px;
+    background: #fff;
+    font-size: 0px;
+    margin: 0 auto;
+}
+
+div#content {
+    position: absolute;
+    top: 70px;
+    left: 50px;
+    right: 50px;
+}
+
+div#footer {
+    position: absolute;
+    bottom: 20px;
+    left: 50px;
+    right: 50px;
+    height: 30px;
+    border-top:1px solid #ccc;
+}
+
+/* HEADER */
+.maintitle {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 0px;
+    color: #ffc;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.welcome {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    /*padding-right: 170px;*/
+    color: rgba(52, 52, 52, 0.96);
+    font-weight: normal;
+    font-size: 15px;
+}
+
+.welcome a:link, .welcome a:visited {
+    color: #000;
+    font-size: 14px;
+}
+
+/* MENU */
+div#menu a:link, div#menu a:visited {
+    color: #36c;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+div#menu > li {
+    display: table-cell;
+    vertical-align: middle;
+    border-right: 1px solid #fff;
+    border-radius: 0px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: #ccc;
+}
+
+div#menu a:link, div#menu a:visited {
+    color: #000;
+    text-decoration-color: #2e9660;
+}
+
+/* pulldown menu */
+div#menu li  ul {
+    display:none;
+    position:absolute;
+    margin: 0;
+    padding:10px 10px 5px 10px;
+    list-style:none;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: white;
+    z-index: 1;
+}
+
+div#menu li:hover ul {
+    display:block;
+}
+
+/* LINK */
+a:link, a:visited {
+    color: #369;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* TABLE */
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+    line-height: 18px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    padding: 5px 15px;
+}
+
+#toptitle {
+    color: #fff;
+    text-decoration: none;
+    padding-left: 44px;
+}
+
+.btn, .btn-primary, .btn-primary:hover {
+    background-color: #ff6466;
+    border-color: #ff6466;
+}
+
+.btn.btn-primary.text-white.shadow {
+    background-color: #ff6466;
+    border-color: #ff6466;
+}
+
+.navbar-brand {
+    font-size: 30px;
+    text-align: left;
+}
+
+.py-5.bg-light.foot {
+    background-color: #dfdfdf !important;
+}

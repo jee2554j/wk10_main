@@ -1,9 +1,9 @@
-{% extends './layout.html' %}  {# '/blog/layout.html'로 하면 오류 #}
+{% extends './layout.html' %}
+{% load humanize %}
 
 {% block content %}
-   <a href="{% url 'shop:item_list' %}">상품 목록으로 돌아가기</a><br/><br/>
-
-
+    {{ block.super }}
+    <a href="{% url 'shop:item_list' %}">상품 목록으로 돌아가기</a><br/><br/>
     <form>
     <fieldset>
     <table>
@@ -12,62 +12,43 @@
         </thead>
         <tbody>
         <tr>
-            <td width="10%">id:</td><td><input type="text" value={{ item.id }}></td>
+            <td width="15%">id:</td>
+            <td><input type="text" value="{{ item.id }}" style = "text-align:right;"></td>
         </tr>
         <tr>
-            <td>글쓴이:</td><td><input type="text" value="{{ item.author }}"></td>
-        </tr>
-        <tr>
-            <td>상품명:</td><td><input type="text" value="{{ item.name }}" style="width:300px;"></td>
-        </tr>
-        <tr>
-            <td>사진:</td><td>{% if item.photo %}<img src="{{ item.photo.url }}" height="300px" />{% endif %}</td>
+            <td>상품:</td>
+            <td><input type="text" value="{{ item.name }}"></td>
         </tr>
         <tr>
             <td>설명:</td>
-            <td><textarea style="width: 400px; height: 200px; overflow: visible;">{{ item.desc }}</textarea></td>
+            <td>
+                <textarea cols="40" rows="10">{{ item.desc.strip }}</textarea>
+            </td>
         </tr>
         <tr>
-            <td>등록 일시:</td><td><input type="text" value="{{ item.created_at }}"></td>
+            <td>가격:</td>
+            <td><input type="text" value="{{ item.price|intcomma }}"
+                       style = "text-align:right;"> 원
+            </td>
         </tr>
         <tr>
-            <td>수정 일시:</td><td><input type="text" value="{{ item.updated }}"></td>
+            <td>사진:</td>
+            <td>
+                {% if item.photo %}<img src="{{ item.photo.url }}"/>{% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>출시 여부:</td>
+            <td>
+                <input type="checkbox" name="item.is_published" value="1"
+                       {% if item.is_published %}checked{% endif %} />
+            </td>
         </tr>
         </tbody>
     </table>
     </fieldset>
-    </form> <br/>
+    </form>
 
-    {# https://python.bakyeono.net/chapter-7-2.html #}
-{#    `for key, value in my_tag.items`:#}
-    `태그 분류`:
-    {% for key, value in my_tag.items %}
-        {% if value > 0 %}
-            <input type="checkbox" name={{ key }} checked>
-        {% else %}
-            <input type="checkbox" name={{ key }}>
-        {% endif %}
-        <label for={{ key }}> {{ key }} </label>
-    {% endfor %} <br/>
-    <hr>
-
-    <table>
-        <thead>
-            <th>id</th>
-            <th>후기</th>
-            <th>작성 일시</th>
-            <th>수정 일시</th>
-        </thead>
-        <tbody>
-        {% for r in item.reviews.all %}
-            <tr>
-                <td>{{ r.id }}</td>
-                <td>{{ r.review }}</td>
-                <td>{{ r.created_at }}</td>
-                <td>{{ r.updated }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-{% endblock %}
+<a href="{% url 'shop:item_edit' item.pk %}">상품 정보 수정</a>
+<a href="{% url 'shop:item_remove' item.pk %}">상품 정보 삭제</a>
+{% endblock content %}

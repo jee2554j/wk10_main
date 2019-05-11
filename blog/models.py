@@ -3,7 +3,6 @@ from pytz import timezone  # 현지 시각 출력을 위하여
 from django.conf import settings
 from django.urls import reverse
 
-
 def local_time(input_time):
     fmt = '%Y-%m-%d %H:%M'
     my_zone = timezone(settings.TIME_ZONE)
@@ -44,9 +43,8 @@ class Post(models.Model):
 
     def tagged(self):
         ts = self.tags.all()
-        # return ', '.join(ts)      # 에러!!
         return '{' + ', '.join(map(str, ts)) + '}'
-
+        # return ', '.join(ts) # 이건 에러(왜 에러인지 모르겠음)
         # if ts:
         #     tag_string = '{'
         #     for t in ts:  # M2M 속성은 관리자이지, 쿼리셋이 아님
@@ -55,6 +53,7 @@ class Post(models.Model):
         #     # tag_string 후미 ', '를 '}'으로 치환
         # else:
         #     tag_string = '{ }'
+
         # return tag_string
     tagged.short_description = '태그 집합'
     # 클래스 메소드로 속성을 대신할 때, verbose_name 대신에 short_description
@@ -66,7 +65,6 @@ class Post(models.Model):
     def get_absolute_url(self):
         # return reverse('blog:post_detail', args=[self.pk])
         return reverse('blog:post_detail', kwargs={'pk': self.pk})
-
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,

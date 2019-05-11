@@ -1,0 +1,2 @@
+-r common.txt  # common.txt 내용을 적용하고 추가 사항 지정
+

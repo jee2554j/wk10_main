@@ -1,0 +1,82 @@
+{% extends "base.html" %}                   <!--base.html을 상속받는다고 선언-->
+{% block title %}2조 MAIN PAGE{% endblock %}    <!--title 블록 재정의-->
+<!--정적 파일인 css 연결하기 위하여, staticfiles를 로드-->
+{% load staticfiles %}
+{% load humanize %}
+<!--extrastyle 블록을 재정의하여 추가적으로 home.css 연결-->
+{% block extrastyle %}{% static "../static/home.css" %}{% endblock %}
+{% block content %}                         <!--content 블록 재정의-->
+
+<div id="content_home">     <!--content_home 영역 정의-->
+    <div id="homeimg">      <!--homeimg 영역 정의-->
+    </div>
+    <section class="bg-light hero">
+      <div class="container herocont">
+        <div class="row">
+          <div class="col-lg-6 order-2 order-lg-1 herocont2">
+            <h1>2조의 메인 페이지</h1>
+            <p class="lead">shop에서 다양한 스마트 기기들을 만나 보세요! <br /> 새로운 기종이 많이 있습니다.</p>
+            <p>
+              <a href="{% url 'shop:item_list' %}" class="btn btn-primary shadow mr-2 specific">shop 바로가기</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio-->
+    <section class="bg-light cardstart">
+      <div class="container cardview">
+        <h2>최신 blog 글 한 눈에 보기</h2>
+        <div class="row cardcont">
+            {% for post in post_list|slice:":3" %}
+              <div class="col-md-4 mb-4">
+                <div class="card shadow border-0 h-100">
+                  <div class="card-body">
+                    <h5> <a href="/blog/{{ post.pk }}" class="text-dark">{{ post.title }}</a></h5>
+                    <p>{{ post.created_at }}</p>
+                    <p><a href="/blog/{{ post.pk }}">{{ post.short_content }}</a></p>
+                    <p class="card-text"><a href="/blog/{{ post.pk }}">더 보기</a></p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+        </div>
+    </section>
+
+{#    <section class="bg-light cardstart">#}
+{#      <div class="container cardview">#}
+{#        <h2>상품 모아보기(가격 높은 순)</h2><br />#}
+{#          <div class="caseldiv">#}
+{#            <div id="demo" class="carousel slide" data-ride="carousel">#}
+{#                      <!-- Indicators -->#}
+{#                      <ul class="carousel-indicators">#}
+{#                        <li data-target="#demo" data-slide-to="0" class="active"></li>#}
+{#                        <li data-target="#demo" data-slide-to="1"></li>#}
+{#                        <li data-target="#demo" data-slide-to="2"></li>#}
+{#                      </ul>#}
+{##}
+{#                      <div class="carousel-inner">#}
+{#                        {% for item in item_list|dictsortreversed:"price" %}#}
+{#                            <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">#}
+{#                                  {% if item.photo %}<img class="caselimg" src="{{ item.photo.url }}"/>{% endif %}<br /><br />#}
+{#                                  <a class="caselname" href="{{ item.get_absolute_url }}">{{ item.name }} </a><br />#}
+{#                                  <p class="caselprice">{{ item.price|intcomma }} 원</p>#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                      </div>#}
+{##}
+{#                      <!-- Left and right controls -->#}
+{#                      <a class="carousel-control-prev" href="#demo" data-slide="prev">#}
+{#                        <span class="carousel-control-prev-icon"></span>#}
+{#                      </a>#}
+{#                      <a class="carousel-control-next" href="#demo" data-slide="next">#}
+{#                        <span class="carousel-control-next-icon"></span>#}
+{#                      </a>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#    </section>#}
+</div>
+{% endblock content %}
