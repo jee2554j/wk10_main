@@ -5,7 +5,7 @@ django-debug-toolbar==1.11
 django-extensions==2.1.6
 get==2018.11.19
 idna==2.8
-numpy==1.16.3
+numpy==1.22.0
 pandas==0.24.2
 Pillow==5.4.1
 post==2018.11.20
